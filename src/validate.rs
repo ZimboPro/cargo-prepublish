@@ -54,7 +54,7 @@ pub fn validate(package: &mut Package, cwd: &PathBuf) -> Result<(), PrepublishEr
     if package.homepage.is_none() {
         str.push("Homepage doesn't exist".to_owned());
     };
-    if package.license.is_none() || package.license_file.is_none() {
+    if package.license.is_none() && package.license_file.is_none() {
         str.push("License or License File doesn't exist".to_owned());
     };
     if !package.readme.is_set() {

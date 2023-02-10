@@ -2,10 +2,12 @@
 name = "cargo-prepublish"
 edition = "2021"
 version = "0.1.0"
+authors = ["Leslie de Jager <dejagerleslie@gmail.com>"]
 description = "A cargo plugin to help prepare a crate for publishing to Crates.io"
+homepage = "http://github.com/ZimboPro/cargo-prepublish"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/ZimboPro/cargo-prepublish"
+repository = "http://github.com/ZimboPro/cargo-prepublish"
 
 [dependencies]
 cargo_toml = "0.15.1"

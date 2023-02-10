@@ -14,14 +14,14 @@ pub fn set_homepage(package: &mut Package, cwd: &PathBuf, args: &Args) -> bool {
         if home_page.is_empty() {
           let (valid, url) = get_repo_url(cwd, args);
           is_repo = valid;
-          package.repository = Some(Inheritable::Set(url));
+          package.homepage = Some(Inheritable::Set(url));
         } else {
             package.homepage = Some(cargo_toml::Inheritable::Set(home_page));
         }
     } else {
         let (valid, url) = get_repo_url(cwd, args);
         is_repo = valid;
-        package.repository = Some(Inheritable::Set(url));
+        package.homepage = Some(Inheritable::Set(url));
     }
   }
   is_repo

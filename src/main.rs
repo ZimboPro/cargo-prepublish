@@ -1,3 +1,4 @@
+#![doc = include_str!(r#"../README.md"#)]
 mod author;
 mod description;
 mod documentation;
@@ -36,7 +37,7 @@ pub struct Args {
   pub valid: bool,
 }
 
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Clone)]
 pub enum PrepublishErrors {
     #[error("The Cargo.toml is invalid")]
     InValid(Vec<String>),

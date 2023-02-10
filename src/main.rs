@@ -6,6 +6,7 @@ mod license;
 mod readme;
 mod repository;
 mod validate;
+mod categories;
 
 use std::fs;
 

@@ -1,0 +1,30 @@
+[package]
+name = "cargo-prepublish"
+edition = "2021"
+version = "0.1.0"
+description = "A cargo plugin to help prepare a crate for publishing to Crates.io"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/ZimboPro/cargo-prepublish"
+
+[dependencies]
+cargo_toml = "0.15.1"
+dotenvy = "0.15.6"
+env_logger = "0.10.0"
+git2 = "0.16.1"
+log = "0.4.17"
+read_input = "0.8.6"
+regex = "1.7.1"
+thiserror = "1.0.38"
+toml = "0.7.2"
+
+[dependencies.clap]
+version = "4.1.4"
+features = [
+    "derive",
+    "env",
+]
+
+[dependencies.toml_edit]
+version = "0.19.3"
+features = ["serde"]

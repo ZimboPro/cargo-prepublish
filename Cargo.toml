@@ -6,6 +6,12 @@ authors = ["Leslie de Jager <dejagerleslie@gmail.com>"]
 description = "A cargo plugin to help prepare a crate for publishing to Crates.io"
 homepage = "http://github.com/ZimboPro/cargo-prepublish"
 readme = "README.md"
+categories = [
+    "cargo",
+    "cargo",
+    "cargo-plugin",
+    "prepublish",
+]
 license = "MIT OR Apache-2.0"
 repository = "http://github.com/ZimboPro/cargo-prepublish"
 
@@ -26,7 +32,3 @@ features = [
     "derive",
     "env",
 ]
-
-[dependencies.toml_edit]
-version = "0.19.3"
-features = ["serde"]

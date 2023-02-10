@@ -51,6 +51,9 @@ pub fn validate(package: &mut Package, cwd: &PathBuf) -> Result<(), PrepublishEr
     if package.description.is_none() {
         str.push("Description doesn't exist".to_owned());
     };
+    if package.categories.is_empty() {
+        str.push("No Categories are listed".to_owned());
+    };
     if package.homepage.is_none() {
         str.push("Homepage doesn't exist".to_owned());
     };

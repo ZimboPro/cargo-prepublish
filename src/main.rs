@@ -10,6 +10,7 @@ mod categories;
 
 use std::fs;
 
+use categories::set_categories;
 use clap::Parser;
 #[macro_use]
 extern crate log;
@@ -67,6 +68,7 @@ fn main() -> Result<(), PrepublishErrors> {
                 set_authors(&mut package, &args);
                 set_license(&mut package, &args);
                 set_description(&mut package, &args);
+                set_categories(&mut package, &args);
                 let in_repo = set_homepage(&mut package, &cwd, &args);
                 set_repo(&mut package, &cwd, &args);
                 set_documentation(&mut package, &args);

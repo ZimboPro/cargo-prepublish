@@ -44,31 +44,27 @@ pub fn get_repo_url(cwd: &PathBuf, args: &Args) -> (bool, String) {
           if list.is_empty() {
             warn!("This project is not in a git repository.");
             is_repo = false;
-          } else {
-            if list.len() == 1 {
-              let name = list.get(0).unwrap();
-              let remote = repo.find_remote(name);
-              match remote {
-                Ok(details) => {
-                  let url = details.url().unwrap();
-                  repo_url = extract_url(url);
-                }
-                Err(e) => error!("Error occurred getting remote details: {}", e),
+          } else if list.len() == 1 {
+            let name = list.get(0).unwrap();
+            let remote = repo.find_remote(name);
+            match remote {
+              Ok(details) => {
+                let url = details.url().unwrap();
+                repo_url = extract_url(url);
               }
-            } else {
-              if !args.non_interactive {
-                let mut cnt = 0;
-                println!("Please select a repo");
-                for i in &list {
-                  println!("{}) {}", cnt, i.unwrap());
-                  cnt = cnt + 1;
-                }
-                let opt = input::<usize>().max(cnt).get();
-                repo_url = extract_url(list.get(opt).unwrap());
-              } else {
-                repo_url = extract_url(list.get(0).unwrap());
-              }
+              Err(e) => error!("Error occurred getting remote details: {}", e),
             }
+          } else if !args.non_interactive {
+            let mut cnt = 0;
+            println!("Please select a repo");
+            for i in &list {
+              println!("{}) {}", cnt, i.unwrap());
+              cnt += 1;
+            }
+            let opt = input::<usize>().max(cnt).get();
+            repo_url = extract_url(list.get(opt).unwrap());
+          } else {
+            repo_url = extract_url(list.get(0).unwrap());
           }
         }
         Err(e) => {

@@ -77,10 +77,10 @@ pub fn validate(package: &mut Package, cwd: &PathBuf) -> Result<(), PrepublishEr
     println!("You package is almost ready for publishing.");
     println!("Suggest that you run these for final checks:");
     println!("cargo publish --dry-run");
-    println!("");
+    println!();
     println!("To check that you are not sending any unnecessary files.");
     println!("cargo package --list");
-    println!("");
+    println!();
     println!(
       "More details can be found here https://doc.rust-lang.org/cargo/reference/publishing.html"
     );

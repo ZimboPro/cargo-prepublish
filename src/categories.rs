@@ -19,8 +19,8 @@ pub fn set_categories(package: &mut Package, args: &Args) {
         println!("Please enter a valid word");
         continue;
       }
-      if category.contains(" ") {
-        category = category.replace(" ", "-");
+      if category.contains(' ') {
+        category = category.replace(' ', "-");
       }
       cat_inputs.push(category.clone().to_lowercase());
       category = input::<String>().get();
@@ -29,6 +29,6 @@ pub fn set_categories(package: &mut Package, args: &Args) {
       package.categories.set(cat_inputs);
     }
   } else if package.categories.is_empty() {
-    package.categories = Some(vec![package.name.replace(" ", "-").to_lowercase()]).into()
+    package.categories = Some(vec![package.name.replace(' ', "-").to_lowercase()]).into()
   }
 }

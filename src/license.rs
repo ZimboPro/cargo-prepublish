@@ -46,27 +46,27 @@ impl FromStr for License {
 pub fn set_license(package: &mut Package, args: &Args) {
   if package.license.is_none() && package.license_file.is_none() {
     if !args.non_interactive {
-        println!("A License doesn't exist. Would you like to use a file or a standard template?");
-        println!("1) Template");
-        println!("2) File");
-        println!("Select an option (Default is 1):");
-        let t = input_d::<u8>().default(1).get();
-        if t == 1 {
-          println!("Please select a template");
-          println!("0) MIT");
-          println!("1) Apache-2.0");
-          println!("2) MIT OR Apache-2.0");
-          println!("3) LGPL-2.1-only AND MIT AND BSD-2-Clause");
-          println!("4) GPL-2.0-or-later WITH Bison-exception-2.2");
-          let t = input::<License>().get();
-          package.license = Some(Inheritable::Set(t.to_string()));
-        } else {
-            package.license_file = Some(cargo_toml::Inheritable::Set(PathBuf::from("LICENSE.txt")));
-            println!("The License File has been set to 'LICENSE.txt'. Update as necessary and/or make sure the file exists before publishing. Press enter to continue");
-            input::<String>().get();
-        }
+      println!("A License doesn't exist. Would you like to use a file or a standard template?");
+      println!("1) Template");
+      println!("2) File");
+      println!("Select an option (Default is 1):");
+      let t = input_d::<u8>().default(1).get();
+      if t == 1 {
+        println!("Please select a template");
+        println!("0) MIT");
+        println!("1) Apache-2.0");
+        println!("2) MIT OR Apache-2.0");
+        println!("3) LGPL-2.1-only AND MIT AND BSD-2-Clause");
+        println!("4) GPL-2.0-or-later WITH Bison-exception-2.2");
+        let t = input::<License>().get();
+        package.license = Some(Inheritable::Set(t.to_string()));
+      } else {
+        package.license_file = Some(cargo_toml::Inheritable::Set(PathBuf::from("LICENSE.txt")));
+        println!("The License File has been set to 'LICENSE.txt'. Update as necessary and/or make sure the file exists before publishing. Press enter to continue");
+        input::<String>().get();
+      }
     } else {
-        package.license = Some(Inheritable::Set(License::MITApache.to_string()));
+      package.license = Some(Inheritable::Set(License::MITApache.to_string()));
     }
   }
 }

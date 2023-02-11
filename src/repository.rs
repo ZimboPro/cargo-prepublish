@@ -56,18 +56,18 @@ pub fn get_repo_url(cwd: &PathBuf, args: &Args) -> (bool, String) {
                 Err(e) => error!("Error occurred getting remote details: {}", e),
               }
             } else {
-                if !args.non_interactive {
-                    let mut cnt = 0;
-                    println!("Please select a repo");
-                    for i in &list {
-                      println!("{}) {}", cnt, i.unwrap());
-                      cnt = cnt + 1;
-                    }
-                    let opt = input::<usize>().max(cnt).get();
-                    repo_url = extract_url(list.get(opt).unwrap());
-                } else {
-                    repo_url = extract_url(list.get(0).unwrap());
+              if !args.non_interactive {
+                let mut cnt = 0;
+                println!("Please select a repo");
+                for i in &list {
+                  println!("{}) {}", cnt, i.unwrap());
+                  cnt = cnt + 1;
                 }
+                let opt = input::<usize>().max(cnt).get();
+                repo_url = extract_url(list.get(opt).unwrap());
+              } else {
+                repo_url = extract_url(list.get(0).unwrap());
+              }
             }
           }
         }

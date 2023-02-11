@@ -7,14 +7,17 @@ description = "A cargo plugin to help prepare a crate for publishing to Crates.i
 homepage = "https://github.com/ZimboPro/cargo-prepublish"
 readme = "README.md"
 categories = [
-    "cargo",
-    "cargo-plugin",
-    "prepublish",
+    "development-tools::cargo-plugins"
 ]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/ZimboPro/cargo-prepublish"
 exclude = [
     "Cargo.toml.bak"
+]
+keywords=[
+    "cargo",
+    "cargo-plugin",
+    "prepublish"
 ]
 
 

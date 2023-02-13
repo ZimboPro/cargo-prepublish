@@ -8,3 +8,6 @@ pub const LICENSE_KEY: &str = "license";
 pub const LICENSE_FILE_KEY: &str = "license_file";
 pub const README_KEY: &str = "readme";
 pub const REPO_KEY: &str = "repository";
+pub const PACKAGE_KEY: &str = "package";
+pub const FEATURES_KEY: &str = "features";
+pub const EXCLUDE_KEY: &str = "exclude";

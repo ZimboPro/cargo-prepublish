@@ -37,8 +37,8 @@ pub fn set_keywords(package: &mut Package, args: &Args) {
 }
 
 pub fn set_keywords_toml(package: &mut Item, args: &Args) {
-    let has_keywords = (package[KEYWORDS_KEY].is_array() && !package[KEYWORDS_KEY].as_array().unwrap().is_empty());
-    if has_keywords && !args.non_interactive {
+    let has_keywords = package.get(KEYWORDS_KEY).is_some() && package[KEYWORDS_KEY].is_array() && !package[KEYWORDS_KEY].as_array().unwrap().is_empty();
+    if !has_keywords && !args.non_interactive {
       println!(
         r#"Keywords are not set. Please enter at least one keyword"#
       );
@@ -64,7 +64,7 @@ pub fn set_keywords_toml(package: &mut Item, args: &Args) {
       if !keyword_inputs.is_empty() {
         package[KEYWORDS_KEY] = toml_edit::Item::Value(Value::Array(keyword_inputs));
       }
-    } else if has_keywords {
+    } else if !has_keywords {
       package[KEYWORDS_KEY] =  toml_edit::Item::Value(Value::String(Formatted::new(package["name"].as_str().unwrap().replace(" ", "-").to_lowercase())))
     }
 }

@@ -73,7 +73,7 @@ pub fn set_license(package: &mut Package, args: &Args) {
 }
 
 pub fn set_license_toml(package: &mut Item, args: &Args) {
-  if package[LICENSE_KEY].is_none() && package[LICENSE_FILE_KEY].is_none() {
+  if package.get(LICENSE_KEY).is_none() && package.get(LICENSE_FILE_KEY).is_none() {
     if !args.non_interactive {
         println!("A License doesn't exist. Would you like to use a file or a standard template?");
         println!("1) Template");

@@ -30,7 +30,7 @@ pub fn set_homepage(package: &mut Package, cwd: &PathBuf, args: &Args) -> bool {
 
 pub fn set_homepage_toml(package: &mut Item, cwd: &PathBuf, args: &Args) -> bool {
   let mut is_repo = true;
-  if package[HOME_KEY].is_none() {
+  if package.get(HOME_KEY).is_none() {
     if !args.non_interactive {
         println!("Please enter a home page for your package. Entering nothing will use a default the repo instead");
         let home_page = input::<String>().get();

@@ -26,7 +26,7 @@ pub fn set_repo(package: &mut Package, cwd: &PathBuf, args: &Args) -> bool {
 
 pub fn set_repo_toml(package: &mut Item, cwd: &PathBuf, args: &Args) -> bool {
   let mut is_repo = true;
-  if package[REPO_KEY].is_none() {
+  if package.get(REPO_KEY).is_none() {
     println!("Please enter a git repository for your package. Entering nothing will use a default the current git repo instead");
     let repo = input::<String>().get();
     if repo.is_empty() {

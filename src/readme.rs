@@ -69,7 +69,7 @@ pub fn set_readme(package: &mut Package, cwd: &PathBuf, args: &Args) {
 }
 
 pub fn set_readme_toml(package: &mut Item, cwd: &PathBuf, args: &Args) {
-  if !package[README_KEY].is_none() {
+  if package.get(README_KEY).is_none() {
     let t = fs::read_dir(cwd);
     let mut exists = false;
     if let Ok(files) = t {

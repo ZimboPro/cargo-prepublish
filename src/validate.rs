@@ -92,22 +92,22 @@ pub fn validate(package: &mut Package, cwd: &PathBuf) -> Result<(), PrepublishEr
 
 pub fn validate_toml(package: &mut Item, cwd: &PathBuf) -> Result<(), PrepublishErrors> {
     let mut str = Vec::new();
-    if package[DESC_KEY].is_none() {
+    if package.get(DESC_KEY).is_none() {
         str.push("Description doesn't exist".to_owned());
     };
-    if package[CATEGORY_KEY].is_none() || (package[CATEGORY_KEY].is_array() && package[CATEGORY_KEY].as_array().unwrap().is_empty()) {
+    if package.get(CATEGORY_KEY).is_none() || (package[CATEGORY_KEY].is_array() && !package[CATEGORY_KEY].as_array().unwrap().is_empty()) {
         str.push("No Categories are listed".to_owned());
     };
-    if package[HOME_KEY].is_none() {
+    if package.get(HOME_KEY).is_none() {
         str.push("Homepage doesn't exist".to_owned());
     };
-    if package[LICENSE_KEY].is_none() && package[LICENSE_FILE_KEY].is_none() {
+    if package.get(LICENSE_KEY).is_none() && package.get(LICENSE_FILE_KEY).is_none() {
         str.push("License or License File doesn't exist".to_owned());
     };
-    if !package[README_KEY].is_none() {
+    if !package.get(README_KEY).is_none() {
         str.push("Readme doesn't exist".to_owned());
     };
-    if package[REPO_KEY].is_none() {
+    if package.get(REPO_KEY).is_none() {
         str.push("Repository doesn't exist".to_owned());
     };
     let args = Args {

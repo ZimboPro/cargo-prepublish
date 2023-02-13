@@ -23,7 +23,7 @@ pub fn set_authors(package: &mut Package, args: &Args) {
 
 
 pub fn set_authors_toml(package: &mut Item, args: &Args) {
-  if package[AUTHORS_KEY].is_none() && !args.non_interactive {
+  if package.get(AUTHORS_KEY).is_none() && !args.non_interactive {
     println!(
       r#"No author has been set. Please enter an author eg "John Doe" or "John Doe <example@email.com>". Press enter if you want to skip."#
     );

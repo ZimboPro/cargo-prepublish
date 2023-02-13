@@ -24,7 +24,7 @@ pub fn set_description(package: &mut Package, args: &Args) {
 }
 
 pub fn set_description_toml(package: &mut Item, args: &Args) {
-  if package[DESC_KEY].is_none() {
+  if package.get(DESC_KEY).is_none() {
     if !args.non_interactive {
         println!(
           "Please enter a description for your package. Entering nothing will use a default instead"

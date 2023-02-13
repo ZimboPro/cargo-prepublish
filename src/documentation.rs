@@ -25,7 +25,7 @@ pub fn set_doc_rs_features(cargo_content: String, has_features: bool) -> String 
     {
       let f = blocks.get(ind).unwrap();
       if !f.contains("all-features") {
-        let n = format!("{}\nall-features = true", f);
+        let n = format!("{f}\nall-features = true");
         blocks.remove(ind);
         blocks.insert(ind, n.as_str().clone());
         return blocks.join("\n\n");
@@ -59,9 +59,8 @@ pub fn set_doc_rs_features_toml(doc: &mut Document, has_features: bool) {
       println!("Doesn't contain");
       doc["package"]["metadata"]["docs"]["rs"]["all-features"] =
         Item::Value(Value::Boolean(Formatted::new(true)));
-      doc["package"]["metadata"]["docs"]["rs"]
-        .as_inline_table_mut()
-        .map(|t| t.fmt());
+      if let Some(t) = doc["package"]["metadata"]["docs"]["rs"]
+        .as_inline_table_mut() { t.fmt() }
     } else if !doc["package.metadata.docs.rs"]["all-features"].is_value() {
       println!("contains");
       doc["package"]["metadata"]["docs"]["rs"]["all-features"] =

@@ -97,7 +97,7 @@ pub fn set_readme_toml(package: &mut Item, cwd: &PathBuf, args: &Args) {
       if option == OptionSkip::Yes {
         let content = format!("# {}", package["name"].as_str().unwrap());
         let readme = cwd.join("README.md");
-        let result = fs::write(&readme, content);
+        let result = fs::write(readme, content);
         if let Err(e) = result {
           error!("An error occurred generating the README: {}", e);
         }

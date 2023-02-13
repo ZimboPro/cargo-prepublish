@@ -13,25 +13,25 @@ mod validate;
 
 use std::fs;
 
-use categories::{set_categories, set_categories_toml};
+use categories::{set_categories_toml};
 use clap::Parser;
 #[macro_use]
 extern crate log;
 
-use author::{set_authors, set_authors_toml};
-use description::{set_description, set_description_toml};
+use author::{set_authors_toml};
+use description::{set_description_toml};
 use documentation::{
-  set_doc_rs_features, set_doc_rs_features_toml, set_documentation, set_documentation_toml,
+  set_doc_rs_features, set_documentation_toml,
 };
-use homepage::{set_homepage, set_homepage_toml};
+use homepage::{set_homepage_toml};
 use keys::{FEATURES_KEY, PACKAGE_KEY};
 use keywords::set_keywords_toml;
-use license::{set_license, set_license_toml};
-use readme::{set_readme, set_readme_toml};
-use repository::{set_repo, set_repo_toml};
+use license::{set_license_toml};
+use readme::{set_readme_toml};
+use repository::{set_repo_toml};
 use thiserror::Error;
 use toml_edit::Document;
-use validate::{validate, validate_toml};
+use validate::{validate_toml};
 
 #[derive(Parser, Debug, Default)]
 #[command(author, version, about, long_about = None)]
@@ -71,26 +71,24 @@ fn main() -> Result<(), PrepublishErrors> {
       let package_data = &doc[PACKAGE_KEY];
       if package_data.is_none() {
         warn!("The Cargo.toml file doesn't have package metadata");
+      } else if args.valid {
+        validate_toml(&mut doc[PACKAGE_KEY], &cwd)?;
       } else {
-        if args.valid {
-          validate_toml(&mut doc[PACKAGE_KEY], &cwd)?;
-        } else {
-          set_authors_toml(&mut doc[PACKAGE_KEY], &args);
-          set_categories_toml(&mut doc[PACKAGE_KEY], &args);
-          set_keywords_toml(&mut doc[PACKAGE_KEY], &args);
-          set_description_toml(&mut doc[PACKAGE_KEY], &args);
-          set_documentation_toml(&mut doc[PACKAGE_KEY], &args);
-          let has_features = doc.get(FEATURES_KEY).is_some()
-            && doc[FEATURES_KEY].is_table()
-            && !doc[FEATURES_KEY].as_table().unwrap().is_empty();
-          set_homepage_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
-          set_license_toml(&mut doc[PACKAGE_KEY], &args);
-          set_readme_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
-          set_repo_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
-          let contents = doc.to_string();
-          let contents = set_doc_rs_features(contents, has_features);
-          let _ = fs::write(cargo_path, contents);
-        }
+        set_authors_toml(&mut doc[PACKAGE_KEY], &args);
+        set_categories_toml(&mut doc[PACKAGE_KEY], &args);
+        set_keywords_toml(&mut doc[PACKAGE_KEY], &args);
+        set_description_toml(&mut doc[PACKAGE_KEY], &args);
+        set_documentation_toml(&mut doc[PACKAGE_KEY], &args);
+        let has_features = doc.get(FEATURES_KEY).is_some()
+          && doc[FEATURES_KEY].is_table()
+          && !doc[FEATURES_KEY].as_table().unwrap().is_empty();
+        set_homepage_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
+        set_license_toml(&mut doc[PACKAGE_KEY], &args);
+        set_readme_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
+        set_repo_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
+        let contents = doc.to_string();
+        let contents = set_doc_rs_features(contents, has_features);
+        let _ = fs::write(cargo_path, contents);
       }
       // match cargo {
       //   Ok(mut c) => {

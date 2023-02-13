@@ -20,8 +20,8 @@ pub fn set_keywords(package: &mut Package, args: &Args) {
         println!("Please enter a valid word");
         continue;
       }
-      if keywords.contains(" ") {
-        keywords = keywords.replace(" ", "-");
+      if keywords.contains(' ') {
+        keywords = keywords.replace(' ', "-");
       }
       keyword_inputs.push(keywords.clone().to_lowercase());
       keywords = input::<String>().get();
@@ -30,7 +30,7 @@ pub fn set_keywords(package: &mut Package, args: &Args) {
       package.keywords.set(keyword_inputs);
     }
   } else if package.keywords.is_empty() {
-    package.keywords = Some(vec![package.name.replace(" ", "-").to_lowercase()]).into()
+    package.keywords = Some(vec![package.name.replace(' ', "-").to_lowercase()]).into()
   }
 }
 
@@ -53,8 +53,8 @@ pub fn set_keywords_toml(package: &mut Item, args: &Args) {
         println!("Please enter a valid word");
         continue;
       }
-      if keyword.contains(" ") {
-        keyword = keyword.replace(" ", "-");
+      if keyword.contains(' ') {
+        keyword = keyword.replace(' ', "-");
       }
       keyword_inputs.push(keyword.clone().to_lowercase());
       keyword = input::<String>().get();
@@ -67,7 +67,7 @@ pub fn set_keywords_toml(package: &mut Item, args: &Args) {
       package["name"]
         .as_str()
         .unwrap()
-        .replace(" ", "-")
+        .replace(' ', "-")
         .to_lowercase(),
     )))
   }

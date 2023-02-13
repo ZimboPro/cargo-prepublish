@@ -31,8 +31,8 @@ cargo prepublish --valid
 
 ## Limitations
 
-* The Cargo.toml file structure might change. A backup file will be made though just in case.
-* Similar to the previous, any comments will most likely be lost.
+* Scattered array of tables (tables are reordered by default byt toml_edit) 
+* ~~Similar to the previous, any comments will most likely be lost.~~ Toml_edit is now used and it retains the comments
 
 ## Contributions
 

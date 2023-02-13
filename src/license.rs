@@ -2,8 +2,12 @@ use std::{path::PathBuf, str::FromStr};
 
 use cargo_toml::{Inheritable, Package};
 use read_input::shortcut::{input, input_d};
+use toml_edit::{Formatted, Item, Value};
 
-use crate::Args;
+use crate::{
+  keys::{LICENSE_FILE_KEY, LICENSE_KEY},
+  Args,
+};
 
 enum License {
   MIT,
@@ -67,6 +71,37 @@ pub fn set_license(package: &mut Package, args: &Args) {
       }
     } else {
       package.license = Some(Inheritable::Set(License::MITApache.to_string()));
+    }
+  }
+}
+
+pub fn set_license_toml(package: &mut Item, args: &Args) {
+  if package.get(LICENSE_KEY).is_none() && package.get(LICENSE_FILE_KEY).is_none() {
+    if !args.non_interactive {
+      println!("A License doesn't exist. Would you like to use a file or a standard template?");
+      println!("1) Template");
+      println!("2) File");
+      println!("Select an option (Default is 1):");
+      let t = input_d::<u8>().default(1).get();
+      if t == 1 {
+        println!("Please select a template");
+        println!("0) MIT");
+        println!("1) Apache-2.0");
+        println!("2) MIT OR Apache-2.0");
+        println!("3) LGPL-2.1-only AND MIT AND BSD-2-Clause");
+        println!("4) GPL-2.0-or-later WITH Bison-exception-2.2");
+        let t = input::<License>().get();
+        package[LICENSE_KEY] = toml_edit::Item::Value(Value::String(Formatted::new(t.to_string())));
+      } else {
+        package[LICENSE_FILE_KEY] =
+          toml_edit::Item::Value(Value::String(Formatted::new("LICENSE.txt".to_string())));
+        println!("The License File has been set to 'LICENSE.txt'. Update as necessary and/or make sure the file exists before publishing. Press enter to continue");
+        input::<String>().get();
+      }
+    } else {
+      package[LICENSE_KEY] = toml_edit::Item::Value(Value::String(Formatted::new(
+        License::MITApache.to_string(),
+      )));
     }
   }
 }

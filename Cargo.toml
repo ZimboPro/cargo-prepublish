@@ -1,7 +1,7 @@
 [package]
 name = "cargo-prepublish"
 edition = "2021"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Leslie de Jager <dejagerleslie@gmail.com>"]
 description = "A cargo plugin to help prepare a crate for publishing to Crates.io"
 homepage = "https://github.com/ZimboPro/cargo-prepublish"

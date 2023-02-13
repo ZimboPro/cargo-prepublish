@@ -1,5 +1,9 @@
 # Cargo-prepublish
 
+[![crates.io](https://img.shields.io/crates/v/cargo-prepublish.svg)](https://crates.io/crates/cargo-prepublish)
+[![docs](https://docs.rs/cargo-prepublish/badge.svg)](https://docs.rs/cargo-prepublish)
+
+
 A Cargo plugin to help setup and prepare a Crate before publishing.
 
 ## How Does it work?

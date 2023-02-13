@@ -1,0 +1,10 @@
+pub const AUTHORS_KEY: &str = "authors";
+pub const CATEGORY_KEY: &str = "categories";
+pub const DESC_KEY: &str = "description";
+pub const DOCS_KEY: &str = "documentation";
+pub const HOME_KEY: &str = "homepage";
+pub const KEYWORDS_KEY: &str = "keywords";
+pub const LICENSE_KEY: &str = "license";
+pub const LICENSE_FILE_KEY: &str = "license_file";
+pub const README_KEY: &str = "readme";
+pub const REPO_KEY: &str = "repository";

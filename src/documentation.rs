@@ -1,7 +1,8 @@
 use cargo_toml::{Inheritable, Package};
 use read_input::shortcut::input;
+use toml_edit::{Item, Value, Formatted};
 
-use crate::Args;
+use crate::{Args, keys::DOCS_KEY};
 
 pub fn set_documentation(package: &mut Package, args: &Args) {
   if package.documentation.is_none() && !args.non_interactive {
@@ -36,4 +37,26 @@ pub fn set_doc_rs_features(cargo_content: String, has_features: bool) -> String 
         return content;
     }
     cargo_content
+}
+
+pub fn set_documentation_toml(package: &mut Item, args: &Args) {
+  if package[DOCS_KEY].is_none() && !args.non_interactive {
+    println!("If this will be the first time this crate is getting published, it is not needed to set the documentation property.");
+    println!("docs.rs will be doing that automatically.");
+    println!("Please enter an documentation url: Press enter to skip");
+    let docs = input::<String>().get();
+    if !docs.is_empty() {
+      package[DOCS_KEY] = Item::Value(Value::String(Formatted::new(docs)));
+    }
+  }
+}
+
+pub fn set_doc_rs_features_toml(package: &mut Item, has_features: bool) {
+    if has_features {
+        if package["metadata"]["docs"]["rs"].is_none() {
+          package["metadata"]["docs"]["rs"]["all-features"] = toml_edit::Item::Value(Value::Boolean(Formatted::new(true)));
+        } else if !package["metadata"]["docs"]["rs"]["all-features"].is_value() {
+          package["metadata"]["docs"]["rs"]["all-features"] = toml_edit::Item::Value(Value::Boolean(Formatted::new(true)));
+        }
+    }
 }

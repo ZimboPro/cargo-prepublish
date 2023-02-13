@@ -1,8 +1,9 @@
 use std::path::PathBuf;
 
 use cargo_toml::Package;
+use toml_edit::Item;
 
-use crate::{PrepublishErrors, repository::get_repo_url, Args};
+use crate::{PrepublishErrors, repository::get_repo_url, Args, keys::{DESC_KEY, CATEGORY_KEY, HOME_KEY, LICENSE_KEY, LICENSE_FILE_KEY, README_KEY, REPO_KEY}};
 
 
 pub fn validate(package: &mut Package, cwd: &PathBuf) -> Result<(), PrepublishErrors> {
@@ -87,6 +88,47 @@ pub fn validate(package: &mut Package, cwd: &PathBuf) -> Result<(), PrepublishEr
     } else {
         Err(PrepublishErrors::InValid(str))
     }
+}
 
-    
+pub fn validate_toml(package: &mut Item, cwd: &PathBuf) -> Result<(), PrepublishErrors> {
+    let mut str = Vec::new();
+    if package[DESC_KEY].is_none() {
+        str.push("Description doesn't exist".to_owned());
+    };
+    if package[CATEGORY_KEY].is_none() || (package[CATEGORY_KEY].is_array() && package[CATEGORY_KEY].as_array().unwrap().is_empty()) {
+        str.push("No Categories are listed".to_owned());
+    };
+    if package[HOME_KEY].is_none() {
+        str.push("Homepage doesn't exist".to_owned());
+    };
+    if package[LICENSE_KEY].is_none() && package[LICENSE_FILE_KEY].is_none() {
+        str.push("License or License File doesn't exist".to_owned());
+    };
+    if !package[README_KEY].is_none() {
+        str.push("Readme doesn't exist".to_owned());
+    };
+    if package[REPO_KEY].is_none() {
+        str.push("Repository doesn't exist".to_owned());
+    };
+    let args = Args {
+        non_interactive: true,
+        ..Args::default()
+    };
+    let (v, _) = get_repo_url(cwd, &args);
+    if !v {
+        str.push("A remote repository doesn't exist".to_owned());
+    };
+    if str.is_empty() {
+        println!("You package is almost ready for publishing.");
+        println!("Suggest that you run these for final checks:");
+        println!("cargo publish --dry-run");
+        println!("");
+        println!("To check that you are not sending any unnecessary files.");
+        println!("cargo package --list");
+        println!("");
+        println!("More details can be found here https://doc.rust-lang.org/cargo/reference/publishing.html");
+        Ok(())
+    } else {
+        Err(PrepublishErrors::InValid(str))
+    }
 }

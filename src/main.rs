@@ -8,21 +8,24 @@ mod readme;
 mod repository;
 mod validate;
 mod categories;
+mod keywords;
+mod keys;
 
 use std::fs;
 
-use categories::set_categories;
+use categories::{set_categories, set_categories_toml};
 use clap::Parser;
 #[macro_use]
 extern crate log;
 
-use author::set_authors;
-use description::set_description;
-use documentation::{set_documentation, set_doc_rs_features};
-use homepage::set_homepage;
-use license::set_license;
-use readme::set_readme;
-use repository::set_repo;
+use author::{set_authors, set_authors_toml};
+use description::{set_description, set_description_toml};
+use documentation::{set_documentation, set_doc_rs_features, set_documentation_toml};
+use homepage::{set_homepage, set_homepage_toml};
+use license::{set_license, set_license_toml};
+use readme::{set_readme, set_readme_toml};
+use repository::{set_repo, set_repo_toml};
+use toml_edit::Document;
 use validate::validate;
 use thiserror::Error;
 
@@ -60,42 +63,57 @@ fn main() -> Result<(), PrepublishErrors> {
     } else {
         let _ = fs::copy(&cargo_path, cwd.join("Cargo.toml.bak"));
       let cargo = cargo_toml::Manifest::from_path(&cargo_path);
-      match cargo {
-        Ok(mut c) => {
-          if let Some(mut package) = c.package {
-            if args.valid {
-                return validate(&mut package, &cwd);
-            } else {
-                set_authors(&mut package, &args);
-                set_license(&mut package, &args);
-                set_description(&mut package, &args);
-                set_categories(&mut package, &args);
-                let in_repo = set_homepage(&mut package, &cwd, &args);
-                set_repo(&mut package, &cwd, &args);
-                set_documentation(&mut package, &args);
-                set_readme(&mut package, &cwd, &args);
-                
-                  c.package = Some(package);
-                  let t = c.bin.iter().position(|x| x.path == Some("src/main.rs".to_string()));
-                  if let Some(bin) = t {
-                      c.bin.remove(bin);
-                  }
-                  let ser = toml::to_string_pretty(&c);
-                  if let Ok(mut doc) = ser {
-                    doc = set_doc_rs_features(doc, !c.features.is_empty());
-                    let _ = fs::write(cargo_path, doc);
-                }
-                if !in_repo {
-                  return Err(PrepublishErrors::NotGit);
-                }
-            }
-            
-          } else {
-            warn!("The Cargo.toml file doesn't have package metadata")
-          }
-        }
-        Err(e) => error!("Error: {}", e),
+      let content = fs::read_to_string(&cargo_path).unwrap();
+      let mut doc = content.parse::<Document>().expect("Invalid TOML file");
+      let package_data = &doc["package"];
+      if package_data.is_none() {
+        warn!("The Cargo.toml file doesn't have package metadata");
+      } else {
+        set_authors_toml(&mut doc["package"], &args);
+        set_categories_toml(&mut doc["package"], &args);
+        set_description_toml(&mut doc["package"], &args);
+        set_documentation_toml(&mut doc["package"], &args);
+        set_homepage_toml(&mut doc["package"], &cwd, &args);
+        set_license_toml(&mut doc["package"], &args);
+        set_readme_toml(&mut doc["package"], &cwd, &args);
+        set_repo_toml(&mut doc["package"], &cwd, &args);
       }
+      // match cargo {
+      //   Ok(mut c) => {
+      //     if let Some(mut package) = c.package {
+      //       if args.valid {
+      //           return validate(&mut package, &cwd);
+      //       } else {
+      //           set_authors(&mut package, &args);
+      //           set_license(&mut package, &args);
+      //           set_description(&mut package, &args);
+      //           set_categories(&mut package, &args);
+      //           let in_repo = set_homepage(&mut package, &cwd, &args);
+      //           set_repo(&mut package, &cwd, &args);
+      //           set_documentation(&mut package, &args);
+      //           set_readme(&mut package, &cwd, &args);
+                
+      //             c.package = Some(package);
+      //             let t = c.bin.iter().position(|x| x.path == Some("src/main.rs".to_string()));
+      //             if let Some(bin) = t {
+      //                 c.bin.remove(bin);
+      //             }
+      //             let ser = toml::to_string_pretty(&c);
+      //             if let Ok(mut doc) = ser {
+      //               doc = set_doc_rs_features(doc, !c.features.is_empty());
+      //               let _ = fs::write(cargo_path, doc);
+      //           }
+      //           if !in_repo {
+      //             return Err(PrepublishErrors::NotGit);
+      //           }
+      //       }
+            
+      //     } else {
+      //       warn!("The Cargo.toml file doesn't have package metadata")
+      //     }
+      //   }
+      //   Err(e) => error!("Error: {}", e),
+      // }
     }
   } else {
     error!("Error occurred getting the current directory");

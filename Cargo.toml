@@ -1,20 +1,23 @@
 [package]
 name = "cargo-prepublish"
 edition = "2021"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Leslie de Jager <dejagerleslie@gmail.com>"]
 description = "A cargo plugin to help prepare a crate for publishing to Crates.io"
 homepage = "https://github.com/ZimboPro/cargo-prepublish"
 readme = "README.md"
 categories = [
-    "cargo",
-    "cargo-plugin",
-    "prepublish",
+    "development-tools::cargo-plugins"
 ]
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/ZimboPro/cargo-prepublish"
 exclude = [
     "Cargo.toml.bak"
+]
+keywords=[
+    "cargo",
+    "cargo-plugin",
+    "prepublish"
 ]
 
 
@@ -33,6 +36,5 @@ toml_edit = "0.19.3"
 [dependencies.clap]
 version = "4.1.4"
 features = [
-    "derive",
-    "env",
+    "derive"
 ]

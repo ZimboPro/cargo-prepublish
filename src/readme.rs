@@ -57,14 +57,13 @@ pub fn set_readme(package: &mut Package, cwd: &PathBuf, args: &Args) {
         let readme = cwd.join("README.md");
         let result = fs::write(&readme, content);
         if let Err(e) = result {
-            error!("An error occurred generating the README: {}", e);
+          error!("An error occurred generating the README: {}", e);
         }
         package.readme.set(cargo_toml::OptionalFile::Path(readme))
-    }
-} else if !exists && args.non_interactive {
-        let readme = cwd.join("README.md");
-        package.readme.set(cargo_toml::OptionalFile::Path(readme))
-        
+      }
+    } else if !exists && args.non_interactive {
+      let readme = cwd.join("README.md");
+      package.readme.set(cargo_toml::OptionalFile::Path(readme))
     }
   }
 }

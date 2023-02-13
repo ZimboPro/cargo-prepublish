@@ -1,5 +1,6 @@
 #![doc = include_str!(r#"../README.md"#)]
 mod author;
+mod categories;
 mod description;
 mod documentation;
 mod homepage;
@@ -28,6 +29,7 @@ use repository::{set_repo, set_repo_toml};
 use toml_edit::Document;
 use validate::validate;
 use thiserror::Error;
+use validate::validate;
 
 #[derive(Parser, Debug, Default)]
 #[command(author, version, about, long_about = None)]
@@ -42,14 +44,13 @@ pub struct Args {
 
 #[derive(Debug, Error, Clone)]
 pub enum PrepublishErrors {
-    #[error("The Cargo.toml is invalid")]
-    InValid(Vec<String>),
-    #[error("This is not a git repo")]
-    NotGit,
-    #[error("Cargo.toml not in current directory")]
-    CargoNotInDir
+  #[error("The Cargo.toml is invalid")]
+  InValid(Vec<String>),
+  #[error("This is not a git repo")]
+  NotGit,
+  #[error("Cargo.toml not in current directory")]
+  CargoNotInDir,
 }
-
 
 fn main() -> Result<(), PrepublishErrors> {
   dotenvy::dotenv().ok();
@@ -61,7 +62,7 @@ fn main() -> Result<(), PrepublishErrors> {
     if !cargo_path.exists() {
       return Err(PrepublishErrors::CargoNotInDir);
     } else {
-        let _ = fs::copy(&cargo_path, cwd.join("Cargo.toml.bak"));
+      let _ = fs::copy(&cargo_path, cwd.join("Cargo.toml.bak"));
       let cargo = cargo_toml::Manifest::from_path(&cargo_path);
       let content = fs::read_to_string(&cargo_path).unwrap();
       let mut doc = content.parse::<Document>().expect("Invalid TOML file");

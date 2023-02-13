@@ -8,7 +8,6 @@ mod license;
 mod readme;
 mod repository;
 mod validate;
-mod categories;
 mod keywords;
 mod keys;
 
@@ -23,13 +22,13 @@ use author::{set_authors, set_authors_toml};
 use description::{set_description, set_description_toml};
 use documentation::{set_documentation, set_doc_rs_features, set_documentation_toml};
 use homepage::{set_homepage, set_homepage_toml};
+use keywords::set_keywords_toml;
 use license::{set_license, set_license_toml};
 use readme::{set_readme, set_readme_toml};
 use repository::{set_repo, set_repo_toml};
 use toml_edit::Document;
 use validate::validate;
 use thiserror::Error;
-use validate::validate;
 
 #[derive(Parser, Debug, Default)]
 #[command(author, version, about, long_about = None)]
@@ -72,6 +71,7 @@ fn main() -> Result<(), PrepublishErrors> {
       } else {
         set_authors_toml(&mut doc["package"], &args);
         set_categories_toml(&mut doc["package"], &args);
+        set_keywords_toml(&mut doc["package"], &args);
         set_description_toml(&mut doc["package"], &args);
         set_documentation_toml(&mut doc["package"], &args);
         set_homepage_toml(&mut doc["package"], &cwd, &args);

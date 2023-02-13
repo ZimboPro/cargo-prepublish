@@ -1,8 +1,8 @@
 use cargo_toml::{Inheritable, Package};
 use read_input::shortcut::input;
-use toml_edit::{Item, Value, Formatted, Document};
+use toml_edit::{Document, Formatted, Item, Value};
 
-use crate::{Args, keys::DOCS_KEY};
+use crate::{keys::DOCS_KEY, Args};
 
 pub fn set_documentation(package: &mut Package, args: &Args) {
   if package.documentation.is_none() && !args.non_interactive {
@@ -17,24 +17,27 @@ pub fn set_documentation(package: &mut Package, args: &Args) {
 }
 
 pub fn set_doc_rs_features(cargo_content: String, has_features: bool) -> String {
-    if has_features {
-        let mut blocks: Vec<&str> = cargo_content.split("\n\n").collect();
-        let content = if let Some(ind) = blocks.iter().position(|b| b.contains("package.metadata.docs.rs")) {
-            let f = blocks.get(ind).unwrap();
-            if !f.contains("all-features") {
-                let n = format!("{}\nall-features = true", f);
-                blocks.remove(ind);
-                blocks.insert(ind, n.as_str().clone());
-                return blocks.join("\n\n")
-            }
-            blocks.join("\n\n")
-        } else {
-            blocks.push("# You can read more about these settings here https://docs.rs/about/metadata\n[package.metadata.docs.rs]\nall-features = true");
-            blocks.join("\n\n")
-        };
-        return content;
-    }
-    cargo_content
+  if has_features {
+    let mut blocks: Vec<&str> = cargo_content.split("\n\n").collect();
+    let content = if let Some(ind) = blocks
+      .iter()
+      .position(|b| b.contains("package.metadata.docs.rs"))
+    {
+      let f = blocks.get(ind).unwrap();
+      if !f.contains("all-features") {
+        let n = format!("{}\nall-features = true", f);
+        blocks.remove(ind);
+        blocks.insert(ind, n.as_str().clone());
+        return blocks.join("\n\n");
+      }
+      blocks.join("\n\n")
+    } else {
+      blocks.push("# You can read more about these settings here https://docs.rs/about/metadata\n[package.metadata.docs.rs]\nall-features = true");
+      blocks.join("\n\n")
+    };
+    return content;
+  }
+  cargo_content
 }
 
 pub fn set_documentation_toml(package: &mut Item, args: &Args) {
@@ -50,15 +53,19 @@ pub fn set_documentation_toml(package: &mut Item, args: &Args) {
 }
 
 pub fn set_doc_rs_features_toml(doc: &mut Document, has_features: bool) {
-    if has_features {
-      // let val = "true # Some cooment".parse::<toml_edit::Item>().unwrap();
-        if doc.get("package.metadata.docs.rs").is_none() {
-          println!("Doesn't contain");
-          doc["package"]["metadata"]["docs"]["rs"]["all-features"] = Item::Value(Value::Boolean(Formatted::new(true)));
-          doc["package"]["metadata"]["docs"]["rs"].as_inline_table_mut().map(|t| t.fmt());
-        } else if !doc["package.metadata.docs.rs"]["all-features"].is_value() {
-          println!("contains");
-          doc["package"]["metadata"]["docs"]["rs"]["all-features"] = Item::Value(Value::Boolean(Formatted::new(true)));
-        }
+  if has_features {
+    // let val = "true # Some cooment".parse::<toml_edit::Item>().unwrap();
+    if doc.get("package.metadata.docs.rs").is_none() {
+      println!("Doesn't contain");
+      doc["package"]["metadata"]["docs"]["rs"]["all-features"] =
+        Item::Value(Value::Boolean(Formatted::new(true)));
+      doc["package"]["metadata"]["docs"]["rs"]
+        .as_inline_table_mut()
+        .map(|t| t.fmt());
+    } else if !doc["package.metadata.docs.rs"]["all-features"].is_value() {
+      println!("contains");
+      doc["package"]["metadata"]["docs"]["rs"]["all-features"] =
+        Item::Value(Value::Boolean(Formatted::new(true)));
     }
+  }
 }

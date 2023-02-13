@@ -2,9 +2,9 @@ use std::{fs, path::PathBuf, str::FromStr};
 
 use cargo_toml::Package;
 use read_input::shortcut::input;
-use toml_edit::{Item, Formatted, Value};
+use toml_edit::{Formatted, Item, Value};
 
-use crate::{Args, keys::README_KEY};
+use crate::{keys::README_KEY, Args};
 
 #[derive(Debug, PartialEq, Eq)]
 enum OptionSkip {
@@ -82,7 +82,9 @@ pub fn set_readme_toml(package: &mut Item, cwd: &PathBuf, args: &Args) {
           .unwrap()
           .contains("readme.md")
         {
-          package[README_KEY] = toml_edit::Item::Value(Value::String(Formatted::new(p.file_name().to_str().unwrap().to_owned())));
+          package[README_KEY] = toml_edit::Item::Value(Value::String(Formatted::new(
+            p.file_name().to_str().unwrap().to_owned(),
+          )));
           exists = true;
           break;
         }
@@ -97,12 +99,14 @@ pub fn set_readme_toml(package: &mut Item, cwd: &PathBuf, args: &Args) {
         let readme = cwd.join("README.md");
         let result = fs::write(&readme, content);
         if let Err(e) = result {
-            error!("An error occurred generating the README: {}", e);
+          error!("An error occurred generating the README: {}", e);
         }
-        package[README_KEY] = toml_edit::Item::Value(Value::String(Formatted::new("README.md".to_owned())));
-    }
-} else if !exists && args.non_interactive {
-        package[README_KEY] = toml_edit::Item::Value(Value::String(Formatted::new("README.md".to_owned())));
+        package[README_KEY] =
+          toml_edit::Item::Value(Value::String(Formatted::new("README.md".to_owned())));
+      }
+    } else if !exists && args.non_interactive {
+      package[README_KEY] =
+        toml_edit::Item::Value(Value::String(Formatted::new("README.md".to_owned())));
     }
   }
 }

@@ -4,12 +4,12 @@ mod categories;
 mod description;
 mod documentation;
 mod homepage;
+mod keys;
+mod keywords;
 mod license;
 mod readme;
 mod repository;
 mod validate;
-mod keywords;
-mod keys;
 
 use std::fs;
 
@@ -20,16 +20,18 @@ extern crate log;
 
 use author::{set_authors, set_authors_toml};
 use description::{set_description, set_description_toml};
-use documentation::{set_documentation, set_doc_rs_features, set_documentation_toml, set_doc_rs_features_toml};
+use documentation::{
+  set_doc_rs_features, set_doc_rs_features_toml, set_documentation, set_documentation_toml,
+};
 use homepage::{set_homepage, set_homepage_toml};
-use keys::{PACKAGE_KEY, FEATURES_KEY};
+use keys::{FEATURES_KEY, PACKAGE_KEY};
 use keywords::set_keywords_toml;
 use license::{set_license, set_license_toml};
 use readme::{set_readme, set_readme_toml};
 use repository::{set_repo, set_repo_toml};
+use thiserror::Error;
 use toml_edit::Document;
 use validate::{validate, validate_toml};
-use thiserror::Error;
 
 #[derive(Parser, Debug, Default)]
 #[command(author, version, about, long_about = None)]
@@ -78,7 +80,9 @@ fn main() -> Result<(), PrepublishErrors> {
           set_keywords_toml(&mut doc[PACKAGE_KEY], &args);
           set_description_toml(&mut doc[PACKAGE_KEY], &args);
           set_documentation_toml(&mut doc[PACKAGE_KEY], &args);
-          let has_features = doc.get(FEATURES_KEY).is_some() && doc[FEATURES_KEY].is_table() && !doc[FEATURES_KEY].as_table().unwrap().is_empty();
+          let has_features = doc.get(FEATURES_KEY).is_some()
+            && doc[FEATURES_KEY].is_table()
+            && !doc[FEATURES_KEY].as_table().unwrap().is_empty();
           set_homepage_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
           set_license_toml(&mut doc[PACKAGE_KEY], &args);
           set_readme_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
@@ -102,7 +106,7 @@ fn main() -> Result<(), PrepublishErrors> {
       //           set_repo(&mut package, &cwd, &args);
       //           set_documentation(&mut package, &args);
       //           set_readme(&mut package, &cwd, &args);
-                
+
       //             c.package = Some(package);
       //             let t = c.bin.iter().position(|x| x.path == Some("src/main.rs".to_string()));
       //             if let Some(bin) = t {
@@ -117,7 +121,7 @@ fn main() -> Result<(), PrepublishErrors> {
       //             return Err(PrepublishErrors::NotGit);
       //           }
       //       }
-            
+
       //     } else {
       //       warn!("The Cargo.toml file doesn't have package metadata")
       //     }

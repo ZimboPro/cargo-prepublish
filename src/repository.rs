@@ -4,9 +4,9 @@ use cargo_toml::{Inheritable, Package};
 use git2::Repository;
 use read_input::{shortcut::input, InputConstraints};
 use regex::Regex;
-use toml_edit::{Item, Formatted, Value};
+use toml_edit::{Formatted, Item, Value};
 
-use crate::{Args, keys::REPO_KEY};
+use crate::{keys::REPO_KEY, Args};
 
 pub fn set_repo(package: &mut Package, cwd: &PathBuf, args: &Args) -> bool {
   let mut is_repo = true;

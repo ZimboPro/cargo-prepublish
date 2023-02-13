@@ -2,7 +2,7 @@ use cargo_toml::Package;
 use read_input::shortcut::input;
 use toml_edit::{Item, Value};
 
-use crate::{Args, keys::AUTHORS_KEY};
+use crate::{keys::AUTHORS_KEY, Args};
 
 pub fn set_authors(package: &mut Package, args: &Args) {
   if package.authors.is_empty() && !args.non_interactive {
@@ -20,7 +20,6 @@ pub fn set_authors(package: &mut Package, args: &Args) {
     }
   }
 }
-
 
 pub fn set_authors_toml(package: &mut Item, args: &Args) {
   if package.get(AUTHORS_KEY).is_none() && !args.non_interactive {

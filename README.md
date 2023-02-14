@@ -32,6 +32,22 @@ cargo prepublish -v
 cargo prepublish --valid
 ```
 
+## What are the checks
+
+It checks the following
+* categories: If it doesn't exists then an empty array is added with a comment to the docs
+* description
+* documentation (Optional) Crates.io will link it to docs.rs automatically
+* homepage: Uses git repo as the default if not set or entered
+* keywords: At least one keyword needs to be entered. Default is the package name
+* license and license-file: The default is license MIT OR Apache 2.0
+* readme: Will first look for an existing one and if not, then one will be generated
+* repository: Will extract for git if a valid git repo
+* authors: Optional
+
+### Extra checks
+
+* package.metadata.docs.rs.all-features: This will only be applied for when a crate has features
 
 ## Limitations
 

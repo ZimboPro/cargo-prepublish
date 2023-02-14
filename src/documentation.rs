@@ -59,8 +59,9 @@ pub fn set_doc_rs_features_toml(doc: &mut Document, has_features: bool) {
       println!("Doesn't contain");
       doc["package"]["metadata"]["docs"]["rs"]["all-features"] =
         Item::Value(Value::Boolean(Formatted::new(true)));
-      if let Some(t) = doc["package"]["metadata"]["docs"]["rs"]
-        .as_inline_table_mut() { t.fmt() }
+      if let Some(t) = doc["package"]["metadata"]["docs"]["rs"].as_inline_table_mut() {
+        t.fmt()
+      }
     } else if !doc["package.metadata.docs.rs"]["all-features"].is_value() {
       println!("contains");
       doc["package"]["metadata"]["docs"]["rs"]["all-features"] =

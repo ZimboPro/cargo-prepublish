@@ -101,7 +101,7 @@ pub fn validate_toml(package: &mut Item, cwd: &PathBuf) -> Result<(), Prepublish
     str.push("Description doesn't exist".to_owned());
   };
   if package.get(CATEGORY_KEY).is_none()
-    || (package[CATEGORY_KEY].is_array() && !package[CATEGORY_KEY].as_array().unwrap().is_empty())
+    || (package[CATEGORY_KEY].is_array() && package[CATEGORY_KEY].as_array().unwrap().is_empty())
   {
     str.push("No Categories are listed".to_owned());
   };
@@ -111,7 +111,7 @@ pub fn validate_toml(package: &mut Item, cwd: &PathBuf) -> Result<(), Prepublish
   if package.get(LICENSE_KEY).is_none() && package.get(LICENSE_FILE_KEY).is_none() {
     str.push("License or License File doesn't exist".to_owned());
   };
-  if package.get(README_KEY).is_some() {
+  if package.get(README_KEY).is_none() {
     str.push("Readme doesn't exist".to_owned());
   };
   if package.get(REPO_KEY).is_none() {

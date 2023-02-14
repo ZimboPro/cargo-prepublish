@@ -13,25 +13,23 @@ mod validate;
 
 use std::fs;
 
-use categories::{set_categories_toml};
+use categories::set_categories_toml;
 use clap::Parser;
 #[macro_use]
 extern crate log;
 
-use author::{set_authors_toml};
-use description::{set_description_toml};
-use documentation::{
-  set_doc_rs_features, set_documentation_toml,
-};
-use homepage::{set_homepage_toml};
+use author::set_authors_toml;
+use description::set_description_toml;
+use documentation::{set_doc_rs_features, set_documentation_toml};
+use homepage::set_homepage_toml;
 use keys::{FEATURES_KEY, PACKAGE_KEY};
 use keywords::set_keywords_toml;
-use license::{set_license_toml};
-use readme::{set_readme_toml};
-use repository::{set_repo_toml};
+use license::set_license_toml;
+use readme::set_readme_toml;
+use repository::set_repo_toml;
 use thiserror::Error;
 use toml_edit::Document;
-use validate::{validate_toml};
+use validate::validate_toml;
 
 #[derive(Parser, Debug, Default)]
 #[command(author, version, about, long_about = None)]

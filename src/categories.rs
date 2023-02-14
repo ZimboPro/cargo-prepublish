@@ -1,5 +1,5 @@
 use cargo_toml::Package;
-use toml_edit::{Item, Value};
+use toml_edit::{Item};
 
 use crate::{keys::CATEGORY_KEY, Args};
 

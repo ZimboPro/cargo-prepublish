@@ -14,14 +14,22 @@ pub fn set_homepage_toml(package: &mut Item, cwd: &PathBuf, args: &Args) -> bool
       if home_page.is_empty() {
         let (valid, url) = get_repo_url(cwd, args);
         is_repo = valid;
-        package[HOME_KEY] = Item::Value(Value::String(Formatted::new(url)));
+        if valid {
+          package[HOME_KEY] = Item::Value(Value::String(Formatted::new(url)));
+        } else {
+          error!("This is not a git repository");
+        }
       } else {
         package[HOME_KEY] = Item::Value(Value::String(Formatted::new(home_page)));
       }
     } else {
       let (valid, url) = get_repo_url(cwd, args);
       is_repo = valid;
-      package[HOME_KEY] = Item::Value(Value::String(Formatted::new(url)));
+      if valid {
+        package[HOME_KEY] = Item::Value(Value::String(Formatted::new(url)));
+      } else {
+        error!("This is not a git repository");
+      }
     }
   }
   is_repo

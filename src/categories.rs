@@ -1,17 +1,6 @@
-use cargo_toml::Package;
 use toml_edit::{Item};
 
 use crate::{keys::CATEGORY_KEY, Args};
-
-pub fn set_categories(package: &mut Package, args: &Args) {
-  if package.categories.is_empty() && !args.non_interactive {
-    println!(
-      r#"Categories are not set. Please enter at least one category manually. You can find the supported categories here https://crates.io/category_slugs"#
-    );
-  } else if package.categories.is_empty() {
-    package.categories = Some(vec![]).into()
-  }
-}
 
 pub fn set_categories_toml(package: &mut Item, args: &Args) {
   let have_categories = package.get(CATEGORY_KEY).is_some()

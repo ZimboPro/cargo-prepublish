@@ -63,7 +63,6 @@ fn main() -> Result<(), PrepublishErrors> {
       return Err(PrepublishErrors::CargoNotInDir);
     } else {
       let _ = fs::copy(&cargo_path, cwd.join("Cargo.toml.bak"));
-      // let cargo = cargo_toml::Manifest::from_path(&cargo_path);
       let content = fs::read_to_string(&cargo_path).unwrap();
       let mut doc = content.parse::<Document>().expect("Invalid TOML file");
       let package_data = &doc[PACKAGE_KEY];
@@ -88,42 +87,6 @@ fn main() -> Result<(), PrepublishErrors> {
         let contents = set_doc_rs_features(contents, has_features);
         let _ = fs::write(cargo_path, contents);
       }
-      // match cargo {
-      //   Ok(mut c) => {
-      //     if let Some(mut package) = c.package {
-      //       if args.valid {
-      //           return validate(&mut package, &cwd);
-      //       } else {
-      //           set_authors(&mut package, &args);
-      //           set_license(&mut package, &args);
-      //           set_description(&mut package, &args);
-      //           set_categories(&mut package, &args);
-      //           let in_repo = set_homepage(&mut package, &cwd, &args);
-      //           set_repo(&mut package, &cwd, &args);
-      //           set_documentation(&mut package, &args);
-      //           set_readme(&mut package, &cwd, &args);
-
-      //             c.package = Some(package);
-      //             let t = c.bin.iter().position(|x| x.path == Some("src/main.rs".to_string()));
-      //             if let Some(bin) = t {
-      //                 c.bin.remove(bin);
-      //             }
-      //             let ser = toml::to_string_pretty(&c);
-      //             if let Ok(mut doc) = ser {
-      //               doc = set_doc_rs_features(doc, !c.features.is_empty());
-      //               let _ = fs::write(cargo_path, doc);
-      //           }
-      //           if !in_repo {
-      //             return Err(PrepublishErrors::NotGit);
-      //           }
-      //       }
-
-      //     } else {
-      //       warn!("The Cargo.toml file doesn't have package metadata")
-      //     }
-      //   }
-      //   Err(e) => error!("Error: {}", e),
-      // }
     }
   } else {
     error!("Error occurred getting the current directory");

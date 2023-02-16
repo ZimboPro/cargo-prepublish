@@ -48,7 +48,6 @@ pub fn get_repo_url(cwd: &PathBuf, args: &Args) -> (bool, String) {
         is_repo = false;
       } else if list.len() == 1 && !list[0].trim().is_empty() {
         let name = list.get(0).unwrap();
-        println!("#{}#", name);
         let remote = repo.show_remote_uri(name);
         match remote {
           Ok(details) => {
@@ -60,7 +59,7 @@ pub fn get_repo_url(cwd: &PathBuf, args: &Args) -> (bool, String) {
         let mut cnt = 0;
         println!("Please select a repo");
         for i in &list {
-          println!("{}) {}", cnt, i);
+          println!("{cnt}) {i}");
           cnt += 1;
         }
         let opt = input::<usize>().max(cnt).get();

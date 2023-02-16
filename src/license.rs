@@ -1,4 +1,4 @@
-use std::{path::PathBuf, str::FromStr};
+use std::{str::FromStr};
 
 use read_input::shortcut::{input, input_d};
 use toml_edit::{Formatted, Item, Value};

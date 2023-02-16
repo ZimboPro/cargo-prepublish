@@ -22,16 +22,15 @@ keywords=[
 
 
 [dependencies]
-cargo_toml = "0.15.1"
 dotenvy = "0.15.6"
 env_logger = "0.10.0"
-git2 = "0.16.1"
 log = "0.4.17"
 read_input = "0.8.6"
 regex = "1.7.1"
 thiserror = "1.0.38"
 toml = "0.7.2"
 toml_edit = "0.19.3"
+rustygit = { git = "https://github.com/ZimboPro/rusty-git" }
 
 [dependencies.clap]
 version = "4.1.4"

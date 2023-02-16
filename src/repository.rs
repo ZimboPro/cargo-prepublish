@@ -1,28 +1,10 @@
 use std::path::PathBuf;
 
-use cargo_toml::{Inheritable, Package};
-use git2::Repository;
 use read_input::{shortcut::input, InputConstraints};
 use regex::Regex;
 use toml_edit::{Formatted, Item, Value};
 
 use crate::{keys::REPO_KEY, Args};
-
-pub fn set_repo(package: &mut Package, cwd: &PathBuf, args: &Args) -> bool {
-  let mut is_repo = true;
-  if package.repository.is_none() {
-    println!("Please enter a git repository for your package. Entering nothing will use a default the current git repo instead");
-    let repo = input::<String>().get();
-    if repo.is_empty() {
-      let (valid, url) = get_repo_url(cwd, args);
-      is_repo = valid;
-      package.repository = Some(Inheritable::Set(url));
-    } else {
-      package.repository = Some(cargo_toml::Inheritable::Set(repo));
-    }
-  }
-  is_repo
-}
 
 pub fn set_repo_toml(package: &mut Item, cwd: &PathBuf, args: &Args) -> bool {
   let mut is_repo = true;

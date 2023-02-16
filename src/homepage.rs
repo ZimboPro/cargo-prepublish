@@ -16,8 +16,6 @@ pub fn set_homepage_toml(package: &mut Item, cwd: &PathBuf, args: &Args) -> bool
         is_repo = valid;
         if valid {
           package[HOME_KEY] = Item::Value(Value::String(Formatted::new(url)));
-        } else {
-          error!("This is not a git repository");
         }
       } else {
         package[HOME_KEY] = Item::Value(Value::String(Formatted::new(home_page)));
@@ -28,7 +26,7 @@ pub fn set_homepage_toml(package: &mut Item, cwd: &PathBuf, args: &Args) -> bool
       if valid {
         package[HOME_KEY] = Item::Value(Value::String(Formatted::new(url)));
       } else {
-        error!("This is not a git repository");
+        error!("This is not a git repository with a remote URL set.");
       }
     }
   }

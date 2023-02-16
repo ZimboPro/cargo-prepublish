@@ -16,8 +16,6 @@ pub fn set_repo_toml(package: &mut Item, cwd: &PathBuf, args: &Args) -> bool {
       let (valid, url) = get_repo_url(cwd, args);
       if valid {
         package[REPO_KEY] = toml_edit::Item::Value(Value::String(Formatted::new(url)));
-      } else {
-        error!("This is not a git repository");
       }
       is_repo = valid;
     } else {
@@ -44,7 +42,7 @@ pub fn get_repo_url(cwd: &PathBuf, args: &Args) -> (bool, String) {
   match repo.list_remotes() {
     Ok(list) => {
       if list.is_empty() {
-        warn!("This project is not in a git repository.");
+        error!("This project is not in a git repository.");
         is_repo = false;
       } else if list.len() == 1 && !list[0].trim().is_empty() {
         let name = list.get(0).unwrap();
@@ -65,12 +63,12 @@ pub fn get_repo_url(cwd: &PathBuf, args: &Args) -> (bool, String) {
         let opt = input::<usize>().max(cnt).get();
         repo_url = extract_url(list.get(opt).unwrap());
       } else {
-        warn!("This project is not in a git repository or there are multiple remotes set.");
+        error!("There are multiple remotes set. Please use the interactive mode to select the correct remote");
         is_repo = false;
       }
     }
     Err(e) => {
-      warn!("This project is not in a git repository. {}", e);
+      error!("This project doesn't have a remote repository set: {}", e);
       is_repo = false;
     }
   }

@@ -1,4 +1,4 @@
-use toml_edit::{Item};
+use toml_edit::Item;
 
 use crate::{keys::CATEGORY_KEY, Args};
 

@@ -67,7 +67,7 @@ fn main() -> Result<(), PrepublishErrors> {
       let mut doc = content.parse::<Document>().expect("Invalid TOML file");
       let package_data = &doc[PACKAGE_KEY];
       if package_data.is_none() {
-        warn!("The Cargo.toml file doesn't have package metadata");
+        error!("The Cargo.toml file doesn't have package metadata");
       } else if args.valid {
         validate_toml(&mut doc[PACKAGE_KEY], &cwd)?;
       } else {

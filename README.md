@@ -48,6 +48,10 @@ It checks the following
 * repository: Will extract for git if a valid git repo
 * authors: Optional
 
+## Automatic configuration
+
+* Adds `Cargo.toml.bak` to the exclude files list
+
 ### Extra checks
 
 * package.metadata.docs.rs.all-features: This will only be applied for when a crate has features

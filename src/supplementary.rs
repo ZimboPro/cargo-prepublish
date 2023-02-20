@@ -3,7 +3,7 @@ use toml_edit::{Item, Value, Array};
 use crate::keys::EXCLUDE_KEY;
 
 pub fn exclude_files(package: &mut Item) {
-    if package[EXCLUDE_KEY].is_none() {
+    if package.get(EXCLUDE_KEY).is_none() {
         let mut excluded_files = Array::new();
         excluded_files.push("Cargo.toml.bak");
         package[EXCLUDE_KEY] = toml_edit::Item::Value(Value::Array(excluded_files));

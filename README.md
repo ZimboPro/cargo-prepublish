@@ -12,8 +12,11 @@ It reads your cargo.toml file and based on the values not present it will either
 
 Some of the prompts will be required and others optional.
 
-## How to use
+## Requirements
 
+Git is required to be installed as tool uses the command line to run `git` commands.
+
+## How to use
 
 ```sh
 cargo install cargo-prepublish
@@ -51,8 +54,7 @@ It checks the following
 
 ## Limitations
 
-* Scattered array of tables (tables are reordered by default byt toml_edit) 
-* ~~Similar to the previous, any comments will most likely be lost.~~ Toml_edit is now used and it retains the comments
+* Scattered array of tables (tables are reordered by default by toml_edit) 
 
 ## Contributions
 

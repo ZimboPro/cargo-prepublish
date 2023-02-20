@@ -1,20 +1,7 @@
-use cargo_toml::{Inheritable, Package};
 use read_input::shortcut::input;
 use toml_edit::{Document, Formatted, Item, Value};
 
 use crate::{keys::DOCS_KEY, Args};
-
-pub fn set_documentation(package: &mut Package, args: &Args) {
-  if package.documentation.is_none() && !args.non_interactive {
-    println!("If this will be the first time this crate is getting published, it is not needed to set the documentation property.");
-    println!("docs.rs will be doing that automatically.");
-    println!("Please enter an documentation url: Press enter to skip");
-    let docs = input::<String>().get();
-    if !docs.is_empty() {
-      package.documentation = Some(Inheritable::Set(docs));
-    }
-  }
-}
 
 pub fn set_doc_rs_features(cargo_content: String, has_features: bool) -> String {
   if has_features {

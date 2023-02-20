@@ -1,28 +1,11 @@
 use std::path::PathBuf;
 
-use cargo_toml::{Inheritable, Package};
-use git2::Repository;
 use read_input::{shortcut::input, InputConstraints};
 use regex::Regex;
+use rustygit::Repository;
 use toml_edit::{Formatted, Item, Value};
 
 use crate::{keys::REPO_KEY, Args};
-
-pub fn set_repo(package: &mut Package, cwd: &PathBuf, args: &Args) -> bool {
-  let mut is_repo = true;
-  if package.repository.is_none() {
-    println!("Please enter a git repository for your package. Entering nothing will use a default the current git repo instead");
-    let repo = input::<String>().get();
-    if repo.is_empty() {
-      let (valid, url) = get_repo_url(cwd, args);
-      is_repo = valid;
-      package.repository = Some(Inheritable::Set(url));
-    } else {
-      package.repository = Some(cargo_toml::Inheritable::Set(repo));
-    }
-  }
-  is_repo
-}
 
 pub fn set_repo_toml(package: &mut Item, cwd: &PathBuf, args: &Args) -> bool {
   let mut is_repo = true;
@@ -31,8 +14,10 @@ pub fn set_repo_toml(package: &mut Item, cwd: &PathBuf, args: &Args) -> bool {
     let repo = input::<String>().get();
     if repo.is_empty() {
       let (valid, url) = get_repo_url(cwd, args);
+      if valid {
+        package[REPO_KEY] = toml_edit::Item::Value(Value::String(Formatted::new(url)));
+      }
       is_repo = valid;
-      package[REPO_KEY] = toml_edit::Item::Value(Value::String(Formatted::new(url)));
     } else {
       package[REPO_KEY] = toml_edit::Item::Value(Value::String(Formatted::new(repo)));
     }
@@ -53,45 +38,37 @@ pub fn extract_url(repo: &str) -> String {
 pub fn get_repo_url(cwd: &PathBuf, args: &Args) -> (bool, String) {
   let mut is_repo = true;
   let mut repo_url = String::new();
-  match Repository::open(cwd) {
-    Ok(repo) => {
-      let repos = repo.remotes();
-      match repos {
-        Ok(list) => {
-          if list.is_empty() {
-            warn!("This project is not in a git repository.");
-            is_repo = false;
-          } else if list.len() == 1 {
-            let name = list.get(0).unwrap();
-            let remote = repo.find_remote(name);
-            match remote {
-              Ok(details) => {
-                let url = details.url().unwrap();
-                repo_url = extract_url(url);
-              }
-              Err(e) => error!("Error occurred getting remote details: {}", e),
-            }
-          } else if !args.non_interactive {
-            let mut cnt = 0;
-            println!("Please select a repo");
-            for i in &list {
-              println!("{}) {}", cnt, i.unwrap());
-              cnt += 1;
-            }
-            let opt = input::<usize>().max(cnt).get();
-            repo_url = extract_url(list.get(opt).unwrap());
-          } else {
-            repo_url = extract_url(list.get(0).unwrap());
+  let repo = Repository::new(cwd);
+  match repo.list_remotes() {
+    Ok(list) => {
+      if list.is_empty() {
+        error!("This project is not in a git repository.");
+        is_repo = false;
+      } else if list.len() == 1 && !list[0].trim().is_empty() {
+        let name = list.get(0).unwrap();
+        let remote = repo.show_remote_uri(name);
+        match remote {
+          Ok(details) => {
+            repo_url = extract_url(&details);
           }
+          Err(e) => error!("Error occurred getting remote details: {}", e),
         }
-        Err(e) => {
-          warn!("This project is not in a git repository. {}", e);
-          is_repo = false;
+      } else if !args.non_interactive {
+        let mut cnt = 0;
+        println!("Please select a repo");
+        for i in &list {
+          println!("{cnt}) {i}");
+          cnt += 1;
         }
+        let opt = input::<usize>().max(cnt).get();
+        repo_url = extract_url(list.get(opt).unwrap());
+      } else {
+        error!("There are multiple remotes set. Please use the interactive mode to select the correct remote");
+        is_repo = false;
       }
     }
     Err(e) => {
-      warn!("This project is not in a git repository. {}", e);
+      error!("This project doesn't have a remote repository set: {}", e);
       is_repo = false;
     }
   }

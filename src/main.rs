@@ -10,6 +10,7 @@ mod license;
 mod readme;
 mod repository;
 mod validate;
+mod supplementary;
 
 use std::fs;
 
@@ -27,6 +28,7 @@ use keywords::set_keywords_toml;
 use license::set_license_toml;
 use readme::set_readme_toml;
 use repository::set_repo_toml;
+use supplementary::exclude_files;
 use thiserror::Error;
 use toml_edit::Document;
 use validate::validate_toml;
@@ -83,6 +85,8 @@ fn main() -> Result<(), PrepublishErrors> {
         set_license_toml(&mut doc[PACKAGE_KEY], &args);
         set_readme_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
         set_repo_toml(&mut doc[PACKAGE_KEY], &cwd, &args);
+
+        exclude_files(&mut doc[PACKAGE_KEY]);
         let contents = doc.to_string();
         let contents = set_doc_rs_features(contents, has_features);
         let _ = fs::write(cargo_path, contents);
